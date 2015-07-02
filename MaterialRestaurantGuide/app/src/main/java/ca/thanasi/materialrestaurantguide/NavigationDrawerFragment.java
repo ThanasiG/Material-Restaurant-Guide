@@ -23,6 +23,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.melnykov.fab.FloatingActionButton;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -45,6 +47,7 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mUserLearnedDrawer;
 
     public MainArrayAdapter arrayAdapter = null;
+    FloatingActionButton fab;
 
     public NavigationDrawerFragment() {
     }
@@ -112,6 +115,7 @@ public class NavigationDrawerFragment extends Fragment {
     public void openDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.openDrawer(mFragmentContainerView);
+            fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
         }
     }
 
@@ -135,6 +139,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the navigation drawer and the action bar app icon.
+
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
@@ -145,6 +150,7 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+                fab.show();
                 if (!isAdded()) {
                     return;
                 }
@@ -155,6 +161,7 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                fab.hide();
                 if (!isAdded()) {
                     return;
                 }
@@ -265,7 +272,8 @@ public class NavigationDrawerFragment extends Fragment {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setTitle(R.string.app_name);
+        actionBar.setTitle("Restaurants");
+        actionBar.setHomeAsUpIndicator(R.mipmap.ic_action_menu);
     }
 
     private ActionBar getActionBar() {

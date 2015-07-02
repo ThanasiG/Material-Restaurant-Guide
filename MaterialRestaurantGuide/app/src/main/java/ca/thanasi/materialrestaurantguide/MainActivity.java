@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity
     private RestaurantGuideDataSource dataSource;
     private Restaurant restaurant;
     private Toolbar mToolbar;
+    FloatingActionButton fab;
+    private DrawerLayout mDrawerLayout;
+    private View mFragmentContainerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +71,12 @@ public class MainActivity extends AppCompatActivity
 
         context = this;
         dataSource = new RestaurantGuideDataSource(this);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mFragmentContainerView = findViewById(R.id.navigation_drawer);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,30 +104,6 @@ public class MainActivity extends AppCompatActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         mNavigationDrawerFragment.openDrawer();
 
-        ((Button) findViewById(R.id.btnRemoveRestaurant)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (restaurant != null) {
-                    dataSource.removeRestaurant(restaurant.id);
-                    ((LinearLayout) findViewById(R.id.details_layout)).setVisibility(View.GONE);
-                    ((TextView) findViewById(R.id.txtNoSelection)).setVisibility(View.VISIBLE);
-
-                    Toast.makeText(getApplicationContext(), "Restaurant " + restaurant.name + " Removed!", Toast.LENGTH_LONG).show();
-                    mNavigationDrawerFragment.updateItems();
-                }
-            }
-        });
-
-        ((Button) findViewById(R.id.btnEditRestaurant)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (restaurant != null) {
-                    Intent intent = new Intent(context, EditRestaurantActivity.class);
-                    intent.putExtra("restaurant_id", restaurant.id);
-                    startActivityForResult(intent, 50);
-                }
-            }
-        });
 
         ((Button) findViewById(R.id.btnMap)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +115,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+
     }
 
     @Override
@@ -166,25 +151,23 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(mFragmentContainerView)) { //replace this with actual function which returns if the drawer is open
+            mDrawerLayout.closeDrawer(mFragmentContainerView);     // replace this with actual function which closes drawer
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public void onSectionAttached(int number) {
-       /* switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }*/
     }
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle(restaurant.name);
     }
 
 
@@ -243,6 +226,27 @@ public class MainActivity extends AppCompatActivity
                 final Activity context2 = this;
                 Intent intent2 = new Intent(context2, AboutActivity.class);
                 startActivity(intent2);
+                break;
+            case R.id.action_edit:
+                if (restaurant != null) {
+                    Intent intent = new Intent(context, EditRestaurantActivity.class);
+                    intent.putExtra("restaurant_id", restaurant.id);
+                    startActivityForResult(intent, 50);
+                } else
+                    Toast.makeText(this, "Please Create/Select a Restaurant.", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_delete:
+                if (restaurant != null) {
+                    dataSource.removeRestaurant(restaurant.id);
+                    ((LinearLayout) findViewById(R.id.details_layout)).setVisibility(View.GONE);
+                    ((TextView) findViewById(R.id.txtNoSelection)).setVisibility(View.VISIBLE);
+
+                    Toast.makeText(getApplicationContext(), "Restaurant " + restaurant.name + " Removed!", Toast.LENGTH_LONG).show();
+                    mNavigationDrawerFragment.updateItems();
+                    getSupportActionBar().setTitle("Restaurants");
+                } else
+                    Toast.makeText(this, "Please Create/Select a Restaurant.", Toast.LENGTH_SHORT).show();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -256,6 +260,7 @@ public class MainActivity extends AppCompatActivity
             if (data != null && data.getIntExtra("restaurant_id", -1) != -1) {
                 loadRestaurant(data.getIntExtra("restaurant_id", -1));
             }
+            getSupportActionBar().setTitle(restaurant.name);
         }
     }
 

@@ -5,12 +5,12 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="vertical"
     android:layout_marginTop="25dp"
-    android:background="@color/material_blue_grey_900"
+    android:background="@color/material_blue_grey_800"
     android:gravity="bottom">
     <ImageView
         android:background="@mipmap/ic_launcher"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         />
     <TextView
         android:layout_width="match_parent"

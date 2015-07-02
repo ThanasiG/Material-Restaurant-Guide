@@ -112,11 +112,11 @@ public class MainArrayAdapter extends ArrayAdapter<Restaurant> {
                 tileSize));
 
         // If statement to set every third item to different color
-        /*if (position % 3 == 0) {
+        if (position % 3 == 0) {
             view.setBackgroundColor(Color.argb(70, 255, 233, 118));
-        } else {*/
+        } else {
             view.setBackgroundColor(Color.alpha(0));
-        //}
+        }
 
         return view;
 
@@ -145,6 +145,7 @@ public class MainArrayAdapter extends ArrayAdapter<Restaurant> {
         mPaint.getTextBounds(mFirstChar, 0, 1, mBounds);
         c.drawText(mFirstChar, 0, 1, 0 + width / 2, 0 + height / 2
                 + (mBounds.bottom - mBounds.top) / 2, mPaint);
+
         return bitmap;
 
     }
@@ -152,8 +153,8 @@ public class MainArrayAdapter extends ArrayAdapter<Restaurant> {
     public int getColor() {
         int[] androidColors = contenxt.getResources().getIntArray(
                 R.array.androidcolors);
-        int randomAndroidColor =
-                androidColors[new Random().nextInt(androidColors.length)];
+        int randomAndroidColor = androidColors[new Random()
+                .nextInt(androidColors.length)];
         return randomAndroidColor;
     }
 }

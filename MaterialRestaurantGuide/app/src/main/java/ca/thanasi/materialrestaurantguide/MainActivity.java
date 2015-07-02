@@ -259,8 +259,8 @@ public class MainActivity extends AppCompatActivity
             this.mNavigationDrawerFragment.updateItems();
             if (data != null && data.getIntExtra("restaurant_id", -1) != -1) {
                 loadRestaurant(data.getIntExtra("restaurant_id", -1));
+                getSupportActionBar().setTitle(restaurant.name);
             }
-            getSupportActionBar().setTitle(restaurant.name);
         }
     }
 

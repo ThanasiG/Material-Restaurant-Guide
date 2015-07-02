@@ -3,6 +3,7 @@ package ca.thanasi.materialrestaurantguide;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -22,6 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -30,6 +33,8 @@ import android.widget.SearchView;
 import android.support.v7.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.melnykov.fab.FloatingActionButton;
 
 
 public class MainActivity extends AppCompatActivity
@@ -44,18 +49,34 @@ public class MainActivity extends AppCompatActivity
     private Activity context;
     private RestaurantGuideDataSource dataSource;
     private Restaurant restaurant;
-    //private Toolbar toolbar;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        if (Build.VERSION.SDK_INT >= 21) {// Could also use Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.primaryDark));
+
+            mToolbar.setElevation(10.00f);
+        }
 
         context = this;
         dataSource = new RestaurantGuideDataSource(this);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(context, EditRestaurantActivity.class);
+                startActivityForResult(intent, 50);
+            }
+        });
 
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -213,11 +234,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_new_restaurant:
+            /*case R.id.action_new_restaurant:
                 final Activity context = this;
                 Intent intent = new Intent(context, EditRestaurantActivity.class);
                 startActivityForResult(intent, 50);
-                break;
+                break;*/
             case R.id.action_about:
                 final Activity context2 = this;
                 Intent intent2 = new Intent(context2, AboutActivity.class);

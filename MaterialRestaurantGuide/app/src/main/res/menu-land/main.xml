@@ -20,5 +20,5 @@
         android:id="@+id/action_about"
         android:icon="@android:drawable/ic_menu_help"
         android:title="@string/title_activity_about"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 </menu>

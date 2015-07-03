@@ -112,11 +112,11 @@ public class MainArrayAdapter extends ArrayAdapter<Restaurant> {
                 tileSize));
 
         // If statement to set every third item to different color
-        if (position % 3 == 0) {
-            view.setBackgroundColor(Color.argb(70, 255, 233, 118));
-        } else {
+        //if (position % 2 == 0) {
+        //    view.setBackgroundColor(Color.argb(70, 255, 233, 118));
+        //} else {
             view.setBackgroundColor(Color.alpha(0));
-        }
+        //}
 
         return view;
 

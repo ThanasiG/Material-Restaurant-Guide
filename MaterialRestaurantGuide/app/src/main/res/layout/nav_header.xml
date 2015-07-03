@@ -5,7 +5,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="vertical"
     android:layout_marginTop="25dp"
-    android:background="@color/material_blue_grey_800"
+    android:background="@drawable/materialbackground"
     android:gravity="bottom">
     <ImageView
         android:background="@mipmap/ic_launcher"
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Restaurants"
-        android:textSize="20sp"
+        android:textSize="26sp"
         android:textColor="@android:color/white"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 

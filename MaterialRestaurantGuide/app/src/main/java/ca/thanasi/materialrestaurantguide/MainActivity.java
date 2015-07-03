@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.os.AsyncTask;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -34,7 +38,15 @@ import android.support.v7.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.melnykov.fab.FloatingActionButton;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity
@@ -53,6 +65,10 @@ public class MainActivity extends AppCompatActivity
     FloatingActionButton fab;
     private DrawerLayout mDrawerLayout;
     private View mFragmentContainerView;
+    private GoogleMap map;
+    private Geocoder geocoder;
+    private List<Address> addressList;
+    private Address address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +164,13 @@ public class MainActivity extends AppCompatActivity
 
             ((LinearLayout) findViewById(R.id.details_layout)).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.txtNoSelection)).setVisibility(View.GONE);
+            getSupportActionBar().setTitle(restaurant.name);
+            if (restaurant.address != null) {
+                AsyncTaskRunner fd = new AsyncTaskRunner();
+                fd.execute();
+            }
+
+
         }
     }
 
@@ -167,7 +190,8 @@ public class MainActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(restaurant.name);
+        //if (restaurant.name.length() == 1)
+        //actionBar.setTitle(restaurant.name);
     }
 
 
@@ -217,11 +241,6 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            /*case R.id.action_new_restaurant:
-                final Activity context = this;
-                Intent intent = new Intent(context, EditRestaurantActivity.class);
-                startActivityForResult(intent, 50);
-                break;*/
             case R.id.action_about:
                 final Activity context2 = this;
                 Intent intent2 = new Intent(context2, AboutActivity.class);
@@ -260,8 +279,14 @@ public class MainActivity extends AppCompatActivity
             if (data != null && data.getIntExtra("restaurant_id", -1) != -1) {
                 loadRestaurant(data.getIntExtra("restaurant_id", -1));
                 getSupportActionBar().setTitle(restaurant.name);
+
             }
         }
+    }
+
+    void failure() {
+        Toast.makeText(this, "Maps unable to launch!", Toast.LENGTH_LONG).show();
+        this.finish();
     }
 
     public static class PlaceholderFragment extends Fragment {
@@ -292,5 +317,51 @@ public class MainActivity extends AppCompatActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
+    private class AsyncTaskRunner extends AsyncTask<Void, Void, Address> {
+        @Override
+        protected Address doInBackground(Void... params) {
+            map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            int restaurantId = restaurant.id;
+
+            restaurant = dataSource.getRestaurant(restaurantId);
+
+
+            try {
+                geocoder = new Geocoder(context);
+                addressList = geocoder.getFromLocationName(restaurant.address, 1);
+                if (addressList == null) {
+                    failure();
+
+                }
+            } catch (IOException ex) {
+                failure();
+
+            }
+            Address address = addressList.get(0);
+            if (address == null) {
+                failure();
+            }
+
+
+            return address;
+        }
+
+        @Override
+        protected void onPostExecute(Address address) {
+            map.clear();
+            map.setMyLocationEnabled(true);
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 13));
+
+            map.addMarker(new MarkerOptions()
+                    .title(restaurant.name)
+                    .snippet(restaurant.address)
+                    .position(new LatLng(address.getLatitude(), address.getLongitude())));
+
+        }
+    }
+
+    ;
+
 
 }

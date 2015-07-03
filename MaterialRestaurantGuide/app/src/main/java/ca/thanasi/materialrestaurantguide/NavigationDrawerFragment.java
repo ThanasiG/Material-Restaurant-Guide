@@ -1,5 +1,6 @@
 package ca.thanasi.materialrestaurantguide;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -97,14 +98,21 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position-1);
+                if (position == 0) {
+                    final Activity context2 = getActivity();
+                    Intent intent2 = new Intent(context2, AboutActivity.class);
+                    startActivity(intent2);
+                }
+                if (position != 0) {
+                    selectItem(position - 1);
+                }
             }
         });
 
         updateItems();
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         View headerview = View.inflate(getActivity(), R.layout.nav_header, null);
-        mDrawerListView.addHeaderView(headerview, null, false);
+        mDrawerListView.addHeaderView(headerview, null, true);
         return mDrawerListView;
     }
 
@@ -114,8 +122,10 @@ public class NavigationDrawerFragment extends Fragment {
 
     public void openDrawer() {
         if (mDrawerLayout != null) {
-            mDrawerLayout.openDrawer(mFragmentContainerView);
-            fab = (FloatingActionButton)getActivity().findViewById(R.id.fab);
+            if(!mFromSavedInstanceState) {
+                mDrawerLayout.openDrawer(mFragmentContainerView);
+            }
+            fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         }
     }
 
@@ -272,7 +282,7 @@ public class NavigationDrawerFragment extends Fragment {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setTitle("Restaurants");
+        //actionBar.setTitle("Restaurants");
         actionBar.setHomeAsUpIndicator(R.mipmap.ic_action_menu);
     }
 
@@ -288,6 +298,7 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+
         void loadRestaurant(int id);
     }
 

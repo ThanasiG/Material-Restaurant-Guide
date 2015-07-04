@@ -69,7 +69,7 @@ public class EditRestaurantActivity extends Activity {
                         );
                     }
 
-                    Toast.makeText(getApplicationContext(), "Restaurant " + restaurantName + " Updated!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Entry \"" + restaurantName + "\" updated!", Toast.LENGTH_LONG).show();
 
                     Intent intent = new Intent();
                     intent.putExtra("restaurant_id", restaurantId);

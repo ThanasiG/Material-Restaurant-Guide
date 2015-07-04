@@ -103,7 +103,7 @@ public class NavigationDrawerFragment extends Fragment {
                     Intent intent2 = new Intent(context2, AboutActivity.class);
                     startActivity(intent2);
                 }
-                if (position != 0) {
+                else if (position != 0) {
                     selectItem(position - 1);
                 }
             }

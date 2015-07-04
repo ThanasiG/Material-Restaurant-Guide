@@ -1,11 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="ToolbarTheme" parent="Theme.AppCompat">
@@ -16,8 +13,9 @@
     </style>
 
     <style name="ColoredButton" parent="Widget.AppCompat.Button">
-        <item name="colorButtonNormal">@color/blue</item>
+        <item name="colorButtonNormal">#2196f3</item>
         <item name="android:elevation">10dp</item>
+
     </style>
 
 </resources>

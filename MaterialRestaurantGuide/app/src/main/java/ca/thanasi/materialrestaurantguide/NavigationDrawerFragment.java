@@ -1,5 +1,6 @@
 package ca.thanasi.materialrestaurantguide;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -12,7 +13,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -46,9 +51,11 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+    private Restaurant restaurant;
 
     public MainArrayAdapter arrayAdapter = null;
     FloatingActionButton fab;
+    public MainActivity mainActivity;
 
     public NavigationDrawerFragment() {
     }
@@ -218,7 +225,7 @@ public class NavigationDrawerFragment extends Fragment {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
         if (mCallbacks != null && arrayAdapter != null) {
-            Restaurant restaurant = (Restaurant) arrayAdapter.getItem(position);
+            restaurant = (Restaurant) arrayAdapter.getItem(position);
             if (restaurant != null) {
                 mCallbacks.loadRestaurant(restaurant.id);
             }

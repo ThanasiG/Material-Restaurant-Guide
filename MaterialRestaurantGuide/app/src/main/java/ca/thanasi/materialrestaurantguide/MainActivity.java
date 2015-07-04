@@ -258,27 +258,30 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.action_delete:
                 if (restaurant != null) {
-                    new AlertDialog.Builder(this)
-                            .setTitle("Delete entry")
-                            .setMessage("Are you sure you want to delete this entry?")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dataSource.removeRestaurant(restaurant.id);
-                                    ((LinearLayout) findViewById(R.id.details_layout)).setVisibility(View.GONE);
-                                    ((TextView) findViewById(R.id.txtNoSelection)).setVisibility(View.VISIBLE);
+                    if (((TextView) findViewById(R.id.txtNoSelection)).getVisibility() == View.GONE) {
+                        new AlertDialog.Builder(this)
+                                .setTitle("Delete entry")
+                                .setMessage("Are you sure you want to delete this entry?")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dataSource.removeRestaurant(restaurant.id);
+                                        ((LinearLayout) findViewById(R.id.details_layout)).setVisibility(View.GONE);
+                                        ((TextView) findViewById(R.id.txtNoSelection)).setVisibility(View.VISIBLE);
 
-                                    Toast.makeText(getApplicationContext(), "Entry \"" + restaurant.name + "\" removed!", Toast.LENGTH_LONG).show();
-                                    mNavigationDrawerFragment.updateItems();
-                                    getSupportActionBar().setTitle("Restaurants");
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // do nothing
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                                        Toast.makeText(getApplicationContext(), "Entry \"" + restaurant.name + "\" removed!", Toast.LENGTH_LONG).show();
+                                        mNavigationDrawerFragment.updateItems();
+                                        getSupportActionBar().setTitle("Restaurants");
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // do nothing
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    } else
+                        Toast.makeText(this, "Please Create/Select a Restaurant.", Toast.LENGTH_SHORT).show();
                 } else
                     Toast.makeText(this, "Please Create/Select a Restaurant.", Toast.LENGTH_SHORT).show();
                 break;

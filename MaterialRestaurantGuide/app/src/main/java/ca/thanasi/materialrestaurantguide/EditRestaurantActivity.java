@@ -48,19 +48,19 @@ public class EditRestaurantActivity extends Activity {
             ((RatingBar) findViewById(R.id.ratingBar)).setRating(restaurant.rating);
         }
 
-        ((Button)findViewById(R.id.btnUpdateRestaurant)).setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.btnUpdateRestaurant)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String restaurantName = ((EditText)context.findViewById(R.id.txtCreateRestaurant)).getText().toString();
-                String restaurantAddress = ((EditText)context.findViewById(R.id.txtAddress)).getText().toString();
-                String restaurantPhone = ((EditText)context.findViewById(R.id.txtPhone)).getText().toString();
-                String restaurantDesc = ((EditText)context.findViewById(R.id.txtDesc)).getText().toString();
-                String restaurantTags = ((EditText)context.findViewById(R.id.txtTags)).getText().toString();
+                String restaurantName = ((EditText) context.findViewById(R.id.txtCreateRestaurant)).getText().toString();
+                String restaurantAddress = ((EditText) context.findViewById(R.id.txtAddress)).getText().toString();
+                String restaurantPhone = ((EditText) context.findViewById(R.id.txtPhone)).getText().toString();
+                String restaurantDesc = ((EditText) context.findViewById(R.id.txtDesc)).getText().toString();
+                String restaurantTags = ((EditText) context.findViewById(R.id.txtTags)).getText().toString();
                 float restaurantRating = ((RatingBar) findViewById(R.id.ratingBar)).getRating();
 
                 String[] tags = restaurantTags.split(", ");
 
-                if (!(restaurantName.isEmpty() || restaurantAddress.isEmpty() || restaurantPhone.isEmpty() || restaurantDesc.isEmpty() || restaurantTags.isEmpty())) {
+                if (!(restaurantName.isEmpty() || restaurantAddress.isEmpty() || restaurantPhone.isEmpty())) {
                     if (restaurantId == -1) {
                         restaurantId = dataSource.createRestaurant(restaurantName, restaurantAddress, restaurantPhone, restaurantDesc, tags, restaurantRating);
                     } else {
@@ -76,8 +76,20 @@ public class EditRestaurantActivity extends Activity {
                     context.setResult(Activity.RESULT_OK, intent);
 
                     context.finish();
+                } else if (restaurantName.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "The name can't be empty!", Toast.LENGTH_LONG).show();
+                } else if (restaurantName.length() > 20) {
+                    Toast.makeText(getApplicationContext(), "The name cant be longer than 20 characters", Toast.LENGTH_LONG).show();
+                } else if (restaurantPhone.length() > 20) {
+                    Toast.makeText(getApplicationContext(), "The phone number cant be longer than 20 characters", Toast.LENGTH_LONG).show();
+                } else if (restaurantAddress.length() > 25) {
+                    Toast.makeText(getApplicationContext(), "The address cant be longer than 40 characters", Toast.LENGTH_LONG).show();
+                } else if (restaurantAddress.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "The address can't be empty!", Toast.LENGTH_LONG).show();
+                } else if (restaurantPhone.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "The phone number can't be empty!", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Can't be Empty!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Update was not successful", Toast.LENGTH_LONG).show();
                 }
             }
         });

@@ -131,6 +131,9 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            fab.show();
+        }
     }
 
     @Override
@@ -163,11 +166,21 @@ public class MainActivity extends AppCompatActivity
 
             ((RelativeLayout) findViewById(R.id.details_layout)).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.txtNoSelection)).setVisibility(View.GONE);
-            map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+
+            map = ((CustomMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            final ScrollView svDetails = (ScrollView)findViewById(R.id.scrollView_details);
+
             getSupportActionBar().setTitle(restaurant.name);
             if (restaurant.address != null) {
                 AsyncTaskRunner fd = new AsyncTaskRunner();
                 fd.execute();
+
+                ((CustomMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).setListener(new CustomMapFragment.OnTouchListener() {
+                    @Override
+                    public void onTouch() {
+                        svDetails.requestDisallowInterceptTouchEvent(true);
+                    }
+                });
 
             }
 

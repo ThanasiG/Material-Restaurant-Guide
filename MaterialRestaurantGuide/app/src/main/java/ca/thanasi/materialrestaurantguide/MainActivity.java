@@ -2,41 +2,39 @@ package ca.thanasi.materialrestaurantguide;
 
 import android.app.Activity;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.os.AsyncTask;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.SearchView;
-import android.support.v7.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -127,13 +125,12 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if (restaurant != null) {
-                    Intent intent = new Intent(context, MapActivity.class);
-                    intent.putExtra("restaurant_id", restaurant.id);
-                    startActivity(intent);
+                        Intent intent = new Intent(context, MapActivity.class);
+                        intent.putExtra("restaurant_id", restaurant.id);
+                        startActivity(intent);
                 }
             }
         });
-
     }
 
     @Override
@@ -164,13 +161,16 @@ public class MainActivity extends AppCompatActivity
             ((TextView) findViewById(R.id.txtRTags)).setText(TextUtils.join(", ", restaurant.tags));
             ((RatingBar) findViewById(R.id.ratingBar)).setRating(restaurant.rating);
 
-            ((LinearLayout) findViewById(R.id.details_layout)).setVisibility(View.VISIBLE);
+            ((RelativeLayout) findViewById(R.id.details_layout)).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.txtNoSelection)).setVisibility(View.GONE);
+            map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
             getSupportActionBar().setTitle(restaurant.name);
             if (restaurant.address != null) {
                 AsyncTaskRunner fd = new AsyncTaskRunner();
                 fd.execute();
+
             }
+
 
 
         }
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dataSource.removeRestaurant(restaurant.id);
-                                        ((LinearLayout) findViewById(R.id.details_layout)).setVisibility(View.GONE);
+                                        ((RelativeLayout) findViewById(R.id.details_layout)).setVisibility(View.GONE);
                                         ((TextView) findViewById(R.id.txtNoSelection)).setVisibility(View.VISIBLE);
 
                                         Toast.makeText(getApplicationContext(), "Entry \"" + restaurant.name + "\" removed!", Toast.LENGTH_LONG).show();
@@ -304,8 +304,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     void failure() {
-        Toast.makeText(this, "Maps unable to launch!", Toast.LENGTH_LONG).show();
-        this.finish();
+        Toast.makeText(context, "Address not found!", Toast.LENGTH_LONG).show();
     }
 
     public static class PlaceholderFragment extends Fragment {
@@ -340,7 +339,7 @@ public class MainActivity extends AppCompatActivity
     private class AsyncTaskRunner extends AsyncTask<Void, Void, Address> {
         @Override
         protected Address doInBackground(Void... params) {
-            map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+           // map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
             int restaurantId = restaurant.id;
 
             restaurant = dataSource.getRestaurant(restaurantId);
@@ -349,17 +348,12 @@ public class MainActivity extends AppCompatActivity
             try {
                 geocoder = new Geocoder(context);
                 addressList = geocoder.getFromLocationName(restaurant.address, 1);
-                if (addressList == null) {
-                    failure();
 
-                }
             } catch (IOException ex) {
-                failure();
 
             }
-            Address address = addressList.get(0);
-            if (address == null) {
-                failure();
+            if(addressList != null && addressList.size() > 0) {
+                address = addressList.get(0);
             }
 
 
@@ -368,14 +362,20 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Address address) {
-            map.clear();
-            map.setMyLocationEnabled(true);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 13));
+            if(addressList != null && addressList.size() > 0) {
+                map.clear();
+                map.setMyLocationEnabled(true);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 13));
 
-            map.addMarker(new MarkerOptions()
-                    .title(restaurant.name)
-                    .snippet(restaurant.address)
-                    .position(new LatLng(address.getLatitude(), address.getLongitude())));
+                map.addMarker(new MarkerOptions()
+                        .title(restaurant.name)
+                        .snippet(restaurant.address)
+                        .position(new LatLng(address.getLatitude(), address.getLongitude())));
+            }
+            if(addressList == null || !(addressList.size() > 0)) {
+                map.clear();
+                failure();
+            }
 
         }
     }

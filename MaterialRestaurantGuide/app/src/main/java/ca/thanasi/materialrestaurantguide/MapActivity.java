@@ -32,6 +32,7 @@ public class MapActivity extends AppCompatActivity {
     private Restaurant restaurant;
     private Geocoder geocoder;
     Toolbar mToolbar;
+    Address address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +81,10 @@ public class MapActivity extends AppCompatActivity {
             failure();
             return;
         }
-        Address address = addressList.get(0);
-        if (address == null) {
+        if(addressList != null && addressList.size() > 0) {
+            address = addressList.get(0);
+        }
+        else if (address == null) {
             failure();
             return;
         }
@@ -95,7 +98,7 @@ public class MapActivity extends AppCompatActivity {
     }
 
     void failure() {
-        Toast.makeText(this, "Maps unable to launch!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Address not found!", Toast.LENGTH_SHORT).show();
         this.finish();
     }
 

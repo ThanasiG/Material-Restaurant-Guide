@@ -1,7 +1,6 @@
 package ca.thanasi.materialrestaurantguide;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,16 +9,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -34,6 +30,7 @@ public class MainArrayAdapter extends ArrayAdapter<Restaurant> {
     private final char[] mFirstChar = new char[1];
     private int mTileLetterFontSize;
 
+
     public MainArrayAdapter(Activity context, List<Restaurant> restaurantList) {
         super(context, R.layout.custom_list_view, R.id.text1, restaurantList);
         this.contenxt = context;
@@ -43,7 +40,7 @@ public class MainArrayAdapter extends ArrayAdapter<Restaurant> {
 
     @Override
     public long getItemId(int position) {
-        if (position < 0 || position >= restaurantList.size()) {
+        if (position < 0 || position >= restaurantList.size()){
             return -1;
         }
 
@@ -55,43 +52,7 @@ public class MainArrayAdapter extends ArrayAdapter<Restaurant> {
         super.notifyDataSetChanged();
     }
 
-    //@Override
-    //public Filter getFilter() {
-    //    return filter;
-    //}
-
-    Filter filter = new Filter() {
-        @Override
-        protected Filter.FilterResults performFiltering(CharSequence query) {
-            FilterResults filterResults = new FilterResults();
-
-            if (query == null || query.length() == 0) {
-                List<Restaurant> list = new ArrayList<Restaurant>(restaurantListOrig);
-                filterResults.values = list;
-                filterResults.count = list.size();
-            } else {
-                List<Restaurant> newValues = new ArrayList<Restaurant>();
-
-                for (int i = 0; i < restaurantList.size(); i++) {
-                    Restaurant value = restaurantList.get(i);
-                    if (value.name.toLowerCase().contains(query) || (TextUtils.join(" ", value.tags)).toLowerCase().contains(query.toString().toLowerCase())) {
-                        newValues.add(value);
-                    }
-                }
-                filterResults.values = newValues;
-                filterResults.count = newValues.size();
-            }
-            return filterResults;
-        }
-
-        @Override
-        protected void publishResults(CharSequence query, FilterResults filterResults) {
-            restaurantList = (List<Restaurant>) filterResults.values;
-            notifyDataSetChanged();
-        }
-    };
-
-    public View getView(int position, View view, ViewGroup parent) {
+    /*public View getView(int position, View view, ViewGroup parent) {
         final Resources res = contenxt.getResources();
         final String strName = restaurantList.get(position).toString();
         final int tileSize = res
@@ -111,16 +72,12 @@ public class MainArrayAdapter extends ArrayAdapter<Restaurant> {
         imageView.setImageBitmap(getLetterTile(strName, tileSize,
                 tileSize));
 
-        // If statement to set every third item to different color
-        //if (position % 2 == 0) {
-        //    view.setBackgroundColor(Color.argb(70, 255, 233, 118));
-        //} else {
-            view.setBackgroundColor(Color.alpha(0));
-        //}
+        view.setBackgroundColor(Color.alpha(0));
+
 
         return view;
 
-    }
+    }*/
 
     public Bitmap getLetterTile(String displayName, int width, int height) {
         final Resources res = contenxt.getResources();

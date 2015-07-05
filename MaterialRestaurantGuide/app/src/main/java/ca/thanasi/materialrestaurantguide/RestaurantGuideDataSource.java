@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class RestaurantGuideDataSource extends SQLiteOpenHelper {
@@ -96,6 +98,7 @@ public class RestaurantGuideDataSource extends SQLiteOpenHelper {
             cur.close();
         }catch (Exception e) {
         }
+        Collections.sort(res, new CustomComparator());
         return res;
     }
 
@@ -124,5 +127,12 @@ public class RestaurantGuideDataSource extends SQLiteOpenHelper {
         }catch (Exception e) {
         }
         return restaurant;
+    }
+    public class CustomComparator implements Comparator<Restaurant> {
+
+        @Override
+        public int compare(Restaurant lhs, Restaurant rhs) {
+            return lhs.name.compareTo(rhs.toString());
+        }
     }
 }

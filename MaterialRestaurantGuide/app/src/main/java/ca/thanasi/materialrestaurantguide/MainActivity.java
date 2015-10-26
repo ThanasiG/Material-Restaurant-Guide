@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -120,8 +121,17 @@ public class MainActivity extends AppCompatActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         mNavigationDrawerFragment.openDrawer();
 
-
-        ((Button) findViewById(R.id.btnMap)).setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.card_view2)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (restaurant != null) {
+                    String callUri = "tel:" + restaurant.phone;
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(callUri));
+                    startActivity(callIntent);
+                }
+            }
+        });
+        ( findViewById(R.id.btnMap)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (restaurant != null) {

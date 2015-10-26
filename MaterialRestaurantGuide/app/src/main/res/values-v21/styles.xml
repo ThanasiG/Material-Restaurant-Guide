@@ -5,8 +5,9 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="ToolbarTheme" parent="Theme.AppCompat">
+    <style name="ToolbarTheme" parent="Theme.AppCompat.Light">
         <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColor">@color/abc_primary_text_material_light</item>
         <item name="android:actionMenuTextColor">@color/abc_primary_text_material_light</item>
         <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
 

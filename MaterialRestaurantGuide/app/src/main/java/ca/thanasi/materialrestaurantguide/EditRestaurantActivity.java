@@ -3,6 +3,8 @@ package ca.thanasi.materialrestaurantguide;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -48,7 +50,7 @@ public class EditRestaurantActivity extends Activity {
             ((RatingBar) findViewById(R.id.ratingBar)).setRating(restaurant.rating);
         }
 
-        ((Button) findViewById(R.id.btnUpdateRestaurant)).setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.btnUpdateRestaurant)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String restaurantName = ((EditText) context.findViewById(R.id.txtCreateRestaurant)).getText().toString();
@@ -57,6 +59,8 @@ public class EditRestaurantActivity extends Activity {
                 String restaurantDesc = ((EditText) context.findViewById(R.id.txtDesc)).getText().toString();
                 String restaurantTags = ((EditText) context.findViewById(R.id.txtTags)).getText().toString();
                 float restaurantRating = ((RatingBar) findViewById(R.id.ratingBar)).getRating();
+
+
 
                 String[] tags = restaurantTags.split(", ");
 
